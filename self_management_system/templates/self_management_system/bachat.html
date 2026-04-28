@@ -34,26 +34,30 @@
 
     <h2 class="mb-4 text-primary">💰 Bachat Gat Management</h2>
 
-    <a href="{% url 'AddMember' %}" class="btn btn-primary btn-custom">Add Member</a>
-    <a href="{% url 'ViewMembers' %}" class="btn btn-success btn-custom">View Members</a>
+    <!-- ✅ FIXED URL NAMES -->
+    <a href="{% url 'add_member' %}" class="btn btn-primary btn-custom">Add Member</a>
+    <a href="{% url 'view_members' %}" class="btn btn-success btn-custom">View Members</a>
     <a href="{% url 'loanmanagement' %}" class="btn btn-info btn-custom">Loan Management</a>
     <a href="{% url 'reports' %}" class="btn btn-danger btn-custom">Reports</a>
 
     <hr>
 
-    <!-- ✅ FIX: Withdraw must get member.id -->
     <h4 class="mt-4">Members List</h4>
 
-    {% for member in members %}
-        <div class="border p-2 m-2 rounded">
-            <strong>{{ member.name }}</strong>
+    {% if members %}
+        {% for member in members %}
+            <div class="border p-2 m-2 rounded">
+                <strong>{{ member.name }}</strong>
 
-            <a href="{% url 'pigmi_withdraw' member.id %}"
-               class="btn btn-danger btn-sm float-end">
-                💸 Withdraw
-            </a>
-        </div>
-    {% endfor %}
+                <a href="{% url 'pigmi_withdraw' member.id %}"
+                   class="btn btn-danger btn-sm float-end">
+                    💸 Withdraw
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No members found</p>
+    {% endif %}
 
 </div>
 

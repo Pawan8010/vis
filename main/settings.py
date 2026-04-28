@@ -1,19 +1,25 @@
 from pathlib import Path
 import os
 
-# 📁 Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 🔐 SECURITY
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key')
 
-# ❗ Production
-DEBUG = True
+# SECURITY WARNING: keep secret key in production safe
+SECRET_KEY = 'django-insecure-&l-%nj^cy*%^x0jjd8az6^4z$!y)9+55==j42^9flw9+s$h+6^'
 
-# 🌐 Allowed Hosts
-ALLOWED_HOSTS = ['*']
+# ❗ IMPORTANT: set False in production
+DEBUG = False
 
-# 📦 Installed Apps
+
+# ✅ FIXED: required for Render deployment
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'self-management-system-2.onrender.com'
+]
+
+
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -21,18 +27,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Your App
     'self_management_system',
 ]
 
-# ⚙️ Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-
-    # ✅ Required for static files in production
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -41,14 +40,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# 🔗 URL Configuration
 ROOT_URLCONF = 'main.urls'
 
-# 🎨 Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # important
+        'DIRS': [BASE_DIR / "templates"],  # ✅ FIXED (important)
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -60,10 +57,10 @@ TEMPLATES = [
     },
 ]
 
-# 🚀 WSGI
 WSGI_APPLICATION = 'main.wsgi.application'
 
-# 🗄️ Database (SQLite)
+
+# DATABASE (SQLite - OK for small projects)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -71,7 +68,7 @@ DATABASES = {
     }
 }
 
-# 🔐 Password Validators
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -79,26 +76,18 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# 🌍 Internationalization
+
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = 'Asia/Kolkata'   # ✅ FIXED for India
 USE_I18N = True
 USE_TZ = True
 
-# 📁 STATIC FILES (IMPORTANT)
 
+# STATIC FILES (IMPORTANT for Render)
 STATIC_URL = '/static/'
-
-# Where static files will be collected
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Your local static folder (you already created it)
+# (optional but useful)
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / "static"
 ]
-
-# WhiteNoise (for serving static files)
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# 🔢 Default primary key
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

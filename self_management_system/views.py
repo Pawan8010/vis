@@ -12,6 +12,8 @@ from .models import PigmiMember, PigmiTransaction
 # 🏠 Home
 def index(request):
     return render(request, "self_management_system/index.html")
+def register(request):
+    return render(request, 'self_management_system/register.html')
 
 
 # 🔢 Registration Number Generator
