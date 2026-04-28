@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Management</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
+            font-family: 'Segoe UI';
+        }
+
+        .container-box {
+            margin: 40px auto;
+            max-width: 1000px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-custom {
+            border-radius: 20px;
+            padding: 8px 20px;
+        }
+    </style>
+
+    <script>
+        function toggleMemberInput() {
+            let type = document.getElementById("member_type").value;
+
+            let groupDiv = document.getElementById("group_member");
+            let nonGroupDiv = document.getElementById("non_group_member");
+
+            let nameField = document.getElementById("non_member_name");
+            let phoneField = document.getElementById("non_member_phone");
+
+            if (type === "group") {
+                groupDiv.style.display = "block";
+                nonGroupDiv.style.display = "none";
+
+                nameField.required = false;
+                phoneField.required = false;
+            } else {
+                groupDiv.style.display = "none";
+                nonGroupDiv.style.display = "block";
+
+                nameField.required = true;
+                phoneField.required = true;
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="container-box">
+
+    <h2 class="text-center text-primary mb-4">💸 Loan Management</h2>
+
+    <!-- 🔹 Loan Form -->
+    <form method="POST" action="{% url 'add_loan' %}">
+        {% csrf_token %}
+
+        <!-- Member Type -->
+        <div class="mb-3">
+            <label>Member Type</label>
+            <select id="member_type" name="member_type" class="form-control" onchange="toggleMemberInput()" required>
+                <option value="group">Group Member</option>
+                <option value="non-group">Non-Group Member</option>
+            </select>
+        </div>
+
+        <!-- Group Member -->
+        <div id="group_member" class="mb-3">
+            <label>Select Member</label>
+            <select name="member_id" class="form-control">
+                <option value="">-- Select Member --</option>
+                {% for member in members %}
+                    <option value="{{ member.id }}">{{ member.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Non-Group Member -->
+        <div id="non_group_member" class="mb-3" style="display:none;">
+            <label>Enter Name</label>
+            <input type="text" name="non_member_name" id="non_member_name" class="form-control mb-2" placeholder="Enter name">
+
+            <label>Phone Number</label>
+            <input type="text" name="non_member_phone" id="non_member_phone" class="form-control" placeholder="Enter phone number">
+        </div>
+
+        <!-- Amount + Duration -->
+        <div class="row mb-3">
+            <div class="col">
+                <label>Loan Amount (₹)</label>
+                <input type="number" name="amount" class="form-control" required>
+            </div>
+
+            <div class="col">
+                <label>Duration (Months)</label>
+                <input type="number" name="duration" class="form-control" required>
+            </div>
+        </div>
+
+        <!-- Interest -->
+        <div class="mb-3">
+            <label>Interest Rate (%)</label>
+            <input type="number" name="interest" class="form-control" placeholder="Enter interest rate" required>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success btn-custom">Apply Loan</button>
+        </div>
+    </form>
+
+    <hr class="my-4">
+
+    <!-- 🔹 Loan Records -->
+    <h4 class="mb-3 text-secondary">📋 Loan Records</h4>
+
+    <table class="table table-bordered table-hover text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Interest</th>
+                <th>Duration</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for loan in loans %}
+            <tr>
+
+                <!-- Name -->
+                <td>
+                    {% if loan.member %}
+                        {{ loan.member.name }}
+                    {% elif loan.non_member_name %}
+                        {{ loan.non_member_name }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+
+                <!-- Phone -->
+                <td>
+                    {% if loan.member %}
+                        {{ loan.member.mobile }}
+                    {% elif loan.non_member_phone %}
+                        {{ loan.non_member_phone }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+
+                <!-- Type -->
+                <td>
+                    {% if loan.member %}
+                        <span class="badge bg-success">Group</span>
+                    {% else %}
+                        <span class="badge bg-danger">Non-Group</span>
+                    {% endif %}
+                </td>
+
+                <td>₹{{ loan.amount }}</td>
+                <td>{{ loan.interest }}%</td>
+                <td>{{ loan.duration }} months</td>
+
+                <!-- Status -->
+                <td>
+                    {% if loan.is_paid %}
+                        <span class="badge bg-success">Paid</span>
+                    {% else %}
+                        <span class="badge bg-danger">Pending</span>
+                    {% endif %}
+                </td>
+
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No loans available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 🔙 Back Button -->
+    <div class="text-center mt-3">
+        <a href="{% url 'bachat' %}" class="btn btn-light btn-custom">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

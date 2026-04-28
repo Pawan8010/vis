@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Member</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 40%;
+            margin: 50px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Add Member</h2>
+    <form action="{% url 'AddMember' %}" method="POST">
+    {% csrf_token %}
+
+    <label>Full Name</label>
+    <input type="text" name="name" required>
+
+    <label>Mobile Number</label>
+    <input type="tel" name="mobile" pattern="[0-9]{10}" required>
+
+    <label>Email</label>
+    <input type="email" name="email">
+
+    <label>Address</label>
+    <textarea name="address" rows="3"></textarea>
+
+    <label>Joining Date</label>
+    <input type="date" name="joining_date" required>
+
+    <label>Gender</label>
+    <select name="gender">
+        <option value="">Select</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select>
+
+    <label>Initial Deposit</label>
+    <input type="number" name="deposit" step="0.01" min="0" required>
+
+    <button type="submit">Add Member</button>
+</form>
+</div>
+
+</body>
+</html>

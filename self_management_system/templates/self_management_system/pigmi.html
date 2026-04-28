@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pigmi Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+
+        .card-box {
+            max-width: 700px;
+            margin: 80px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-custom {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-light bg-white shadow-sm">
+    <div class="container">
+        <span class="navbar-brand fw-bold text-primary">
+            🐖 PIGMI SYSTEM
+        </span>
+    </div>
+</nav>
+
+<div class="card-box">
+
+    <h3 class="text-primary mb-4">Pigmi Dashboard</h3>
+
+    <!-- Go to member list -->
+    <a href="{% url 'pigmi_view_members' %}" class="btn btn-primary btn-custom">
+        👥 View Members
+    </a>
+
+    <!-- Add new member -->
+    <a href="{% url 'pigmi_add_member' %}" class="btn btn-success btn-custom">
+        ➕ Add Member
+    </a>
+
+    <!-- Deposit page (choose member inside) -->
+    <a href="{% url 'pigmi_deposit' %}" class="btn btn-warning btn-custom">
+        💰 Deposit
+    </a>
+
+    <!-- Dashboard summary (all members balance) -->
+    <a href="{% url 'pigmi_dashboard' %}" class="btn btn-dark btn-custom">
+        📊 Balance Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

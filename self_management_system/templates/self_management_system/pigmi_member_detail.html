@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Member Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+
+        .container-box {
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        .card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 0 10px rgba(0,0,0,0.08);
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .btn-group-custom a {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container container-box">
+
+    <!-- MEMBER INFO -->
+    <div class="card p-4 mb-3">
+        <h3 class="text-primary">👤 {{ member.name }}</h3>
+        <p class="mb-1"><b>Phone:</b> {{ member.phone }}</p>
+        <p class="mb-1"><b>Email:</b> {{ member.email }}</p>
+        <p class="mb-0"><b>Address:</b> {{ member.address }}</p>
+    </div>
+
+    <!-- BALANCE -->
+    <div class="balance-card mb-3">
+        <h4>💰 Current Balance</h4>
+        <h2>₹ {{ balance }}</h2>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="card p-3 mb-3">
+        <div class="btn-group-custom">
+
+            <a href="{% url 'pigmi_deposit' %}?member_id={{ member.id }}" 
+               class="btn btn-success">
+               💰 Deposit
+            </a>
+
+            <a href="{% url 'pigmi_withdraw' member.id %}" 
+               class="btn btn-danger">
+               💸 Withdraw
+            </a>
+
+            <a href="{% url 'pigmi_view_members' %}" 
+               class="btn btn-secondary">
+               ⬅ Back
+            </a>
+
+        </div>
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="row">
+
+        <!-- DEPOSITS -->
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5 class="text-success">Deposits</h5>
+
+                <ul class="list-group">
+                    {% for d in deposits %}
+                        <li class="list-group-item">
+                            + ₹{{ d.amount }}
+                            <small class="text-muted">({{ d.date }})</small>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">No deposits</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- WITHDRAWALS -->
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5 class="text-danger">Withdrawals</h5>
+
+                <ul class="list-group">
+                    {% for w in withdraws %}
+                        <li class="list-group-item">
+                            - ₹{{ w.amount }}
+                            <small class="text-muted">({{ w.date }})</small>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">No withdrawals</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
