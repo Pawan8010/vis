@@ -15,11 +15,13 @@ urlpatterns = [
 
     # 💰 Bachat & Pigmi
     path('bachat/', views.bachat_view, name='bachat'),
+
+    # ❗ REMOVE DUPLICATE pigmi route
     path('pigmi/', views.pigmi_view, name='pigmi'),
 
     # 👤 Members
-    path('add-member/', views.AddMember, name='AddMember'),
-    path('members/', views.view_members, name='ViewMembers'),
+    path('add-member/', views.add_member, name='add_member'),
+    path('members/', views.view_members, name='view_members'),
 
     # 💸 Loans
     path('loan/', views.loanmanagement, name='loanmanagement'),
@@ -30,14 +32,12 @@ urlpatterns = [
     path('reports/', views.reports, name='reports'),
 
     # 🐖 Pigmi System
-    path('pigmi/', views.pigmi_view, name='pigmi'),
     path('pigmi/add-member/', views.add_pigmi_member, name='pigmi_add_member'),
     path('pigmi/members/', views.view_pigmi_members, name='pigmi_view_members'),
     path('pigmi/dashboard/', views.pigmi_dashboard, name='pigmi_dashboard'),
 
-    # ✅ THIS WAS MISSING
+    # 💰 Pigmi transactions
     path('pigmi/deposit/', views.add_pigmi_collection, name='pigmi_deposit'),
     path('pigmi/withdraw/<int:member_id>/', views.withdraw_pigmi, name='pigmi_withdraw'),
-    # (optional but recommended)
     path('pigmi/member/<int:member_id>/', views.pigmi_member_detail, name='pigmi_member_detail'),
 ]
