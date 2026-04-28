@@ -13,7 +13,7 @@ urlpatterns = [
     path('pigmi/', views.pigmi_view, name='pigmi'),
 
     # 👇 FIXED HERE
-    path('add-member/', views.AddMember.as_view(), name='add_member'),
+    path('add-member/', views.AddMember, name='add_member'),
 
     path('members/', views.view_members, name='view_members'),
 
