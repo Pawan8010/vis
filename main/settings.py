@@ -11,11 +11,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key')
 DEBUG = False
 
 # 🌐 Allowed Hosts
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    'self-management-system-2.onrender.com'
-]
+ALLOWED_HOSTS = ['*']
 
 # 📦 Installed Apps
 INSTALLED_APPS = [
