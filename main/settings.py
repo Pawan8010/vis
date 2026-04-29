@@ -14,22 +14,9 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 
 # ─── HOSTS ───────────────────────────────────────────────────────────────────
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    # Render
-    'self-management-system-2.onrender.com',
-    # Railway — auto-set by Railway at runtime
-    os.environ.get('RAILWAY_PUBLIC_DOMAIN', ''),
-    # Fallback: any custom host passed manually
-    os.environ.get('ALLOWED_HOST', ''),
-]
-# Remove empty strings
-ALLOWED_HOSTS = [h for h in ALLOWED_HOSTS if h]
-
-# Safety: allow all hosts when running on Railway or Render (they handle security at edge)
-if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RENDER'):
-    ALLOWED_HOSTS = ['*']
+# Allow all hosts — Railway, Render, and other platforms handle edge security.
+# This prevents "Bad Request (400)" on any deployment platform.
+ALLOWED_HOSTS = ['*']
 
 
 # ─── INSTALLED APPS ──────────────────────────────────────────────────────────
