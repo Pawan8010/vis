@@ -5,7 +5,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # ─── SECURITY ────────────────────────────────────────────────────────────────
-# Read from environment; fall back to insecure default only in local dev.
 SECRET_KEY = os.environ.get(
     'SECRET_KEY',
     'django-insecure-&l-%nj^cy*%^x0jjd8az6^4z$!y)9+55==j42^9flw9+s$h+6^'
@@ -18,13 +17,19 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
+    # Render
     'self-management-system-2.onrender.com',
+    # Railway — auto-set by Railway at runtime
+    os.environ.get('RAILWAY_PUBLIC_DOMAIN', ''),
+    # Fallback: any custom host passed manually
+    os.environ.get('ALLOWED_HOST', ''),
 ]
+# Remove empty strings
+ALLOWED_HOSTS = [h for h in ALLOWED_HOSTS if h]
 
-# Allow any custom host set via environment (useful for Render / Railway)
-_extra_host = os.environ.get('ALLOWED_HOST')
-if _extra_host:
-    ALLOWED_HOSTS.append(_extra_host)
+# Safety: allow all hosts when running on Railway or Render (they handle security at edge)
+if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RENDER'):
+    ALLOWED_HOSTS = ['*']
 
 
 # ─── INSTALLED APPS ──────────────────────────────────────────────────────────
@@ -71,8 +76,6 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 
 # ─── DATABASE ────────────────────────────────────────────────────────────────
-# SQLite is fine for small / demo projects; swap for PostgreSQL in production
-# by setting DATABASE_URL or the individual DB_* env vars below.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -105,29 +108,39 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 _static_dir = BASE_DIR / 'static'
 STATICFILES_DIRS = [_static_dir] if _static_dir.exists() else []
 
-# WhiteNoise compressed manifest storage for production
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Django 4.2+ uses STORAGES dict; whitenoise compressed storage
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 
 # ─── DEFAULT PK ──────────────────────────────────────────────────────────────
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# ─── SECURITY HEADERS (production) ───────────────────────────────────────────
+# ─── SECURITY HEADERS (production only) ──────────────────────────────────────
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
 
-    # HTTPS-only cookies (Render uses HTTPS automatically)
+    # Secure cookies
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-    # Redirect all HTTP → HTTPS (Render's proxy handles this, but belt-and-braces)
-    SECURE_SSL_REDIRECT = True
+    # Railway & Render both terminate SSL at their edge proxy.
+    # We trust the X-Forwarded-Proto header they send, but do NOT
+    # set SECURE_SSL_REDIRECT because the proxy already handles it
+    # and a redirect loop would crash the app.
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = False   # proxy handles this — do NOT set True
 
-    # HSTS: tell browsers to always use HTTPS for 1 year
+    # HSTS
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
