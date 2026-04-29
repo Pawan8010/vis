@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.utils.timezone import now
 from django.db.models import Sum
 from .models import Register, Member, Loan, PigmiMember, PigmiTransaction
-from .models import PigmiMember, PigmiTransaction
 
 
 # 🏠 Home

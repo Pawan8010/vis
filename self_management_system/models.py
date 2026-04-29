@@ -74,7 +74,9 @@ class Loan(models.Model):
     is_paid = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.member.name} - {self.amount}"
+        if self.member:
+            return f"{self.member.name} - {self.amount}"
+        return f"{self.non_member_name} (Non-Member) - {self.amount}"
 
 
 # =========================
